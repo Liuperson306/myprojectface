@@ -59,7 +59,7 @@ def data_collection(data_face, data_lip):
     string = "face:" + data1 + "\n" + "lip:" + data2
     localtime = time.strftime('%Y-%m-%d %H-%M-%S', time.localtime())
     # 打开文件并指定写模式
-    file_name = "dataM_voca " + localtime + ".txt"
+    file_name = "data_M " + localtime + ".txt"
     file = open(file_name, "w")
     # 将字符串写入文件
     file.write(string)
@@ -73,7 +73,7 @@ def data_collection(data_face, data_lip):
     msg = MIMEMultipart()
     msg['From'] = sender_email
     msg['To'] = 'm15507509432@163.com'  # 收件人邮箱
-    msg['Subject'] = 'dataM_voca' + localtime
+    msg['Subject'] = 'data_M' + localtime
 
     # 邮件正文
     text = MIMEText('')
