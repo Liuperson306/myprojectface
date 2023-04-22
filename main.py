@@ -8,24 +8,24 @@ import time
 
 
 
-def QA(data_face, data_lip, num):
+def QA(data_face, num):
     # 定义问题和选项
     question_1 = "Comparing the two full faces (Left and Right), which one looks more realistic?"
     options_1 = ["The Left one looks more realistic", "The Right one looks more realistic"]
-    question_2 = "Comparing the lips of two faces, which one is more in sync with audio?"
-    options_2 = ["The Left one is more in sync with audio", "The Right one is more in sync with audio"]
+    #question_2 = "Comparing the lips of two faces, which one is more in sync with audio?"
+    #options_2 = ["The Left one is more in sync with audio", "The Right one is more in sync with audio"]
 
     # 显示问题并获取用户的答案
     answer_1 = st.radio(label=question_1, options=options_1, key=fr"button{num}.1")
-    answer_2 = st.radio(label=question_2, options=options_2, key=fr"button{num}.2")
+    #answer_2 = st.radio(label=question_2, options=options_2, key=fr"button{num}.2")
 
     # 以1/0数据保存
     ans1 = get_ans(answer_1)
-    ans2 = get_ans(answer_2)
+    #ans2 = get_ans(answer_2)
 
     # 保存结果到列表
     data_face[num - 1] = ans1
-    data_lip[num - 1] = ans2
+    #data_lip[num - 1] = ans2
 
 # 将用户的答案转化为1/0
 def get_ans(answer_str):
@@ -53,14 +53,14 @@ def instrunction():
     st.write(text3)
 
 
-def data_collection(data_face, data_lip):
+def data_collection(data_face):
     # 发送内容
     data1 = ''.join(str(x) for x in data_face)
-    data2 = ''.join(str(x) for x in data_lip)
-    string = "face:" + data1 + "\n" + "lip:" + data2
+    #data2 = ''.join(str(x) for x in data_lip)
+    string =  data1 
     localtime = time.strftime('%Y-%m-%d %H-%M-%S', time.localtime())
     # 打开文件并指定写模式
-    file_name = "data " + localtime + ".txt"
+    file_name = "data_face " + localtime + ".txt"
     file = open(file_name, "w")
     # 将字符串写入文件
     file.write(string)
@@ -74,7 +74,7 @@ def data_collection(data_face, data_lip):
     msg = MIMEMultipart()
     msg['From'] = sender_email
     msg['To'] = 'm15507509432@163.com'  # 收件人邮箱
-    msg['Subject'] = 'data ' + localtime
+    msg['Subject'] = 'data_face ' + localtime
 
     # 邮件正文
     text = MIMEText('')
@@ -109,27 +109,27 @@ def main():
     def switch_page(page_num):
         st.session_state["page_num"] = page_num
         st.session_state["data_face"] = data_face
-        st.session_state["data_lip"] = data_lip
+        #st.session_state["data_lip"] = data_lip
         st.experimental_rerun()  # 清空页面
 
     # 通过 st.session_state 实现页面跳转
     if "page_num" not in st.session_state:
         st.session_state["page_num"] = 1
 
-    if "data_face" and "data_lip" not in st.session_state:
+    if "data_face"  not in st.session_state:
         # 初始化data变量
         data_face = [1 for x in range(0, max_num)]
-        data_lip = [1 for x in range(0, max_num)]
+        #data_lip = [1 for x in range(0, max_num)]
     else:
         # 恢复data变量的状态
         data_face = st.session_state["data_face"]
-        data_lip = st.session_state["data_lip"]
+        #data_lip = st.session_state["data_lip"]
 
     num = st.session_state["page_num"]
 
     # 显示页面内容
     play_video(file_list[num-1].rstrip()) 
-    QA(data_face, data_lip, num)
+    QA(data_face, num)
 
     # 显示上一页和下一页按钮
     # 第2页到224页
@@ -148,7 +148,7 @@ def main():
 
         if not st.session_state.button_clicked:
             if col1.button("Submit results"):
-                data_collection(data_face, data_lip)
+                data_collection(data_face)
                 st.session_state.button_clicked = True
 
         if st.session_state.button_clicked == True:
